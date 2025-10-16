@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Controls Quiz - CompTIA Security+ SY0-701 (1.1)</title>
+  <style>
+    :root {
+      --bg: #0f172a;        /* slate-900 */
+      --card: #111827;      /* gray-900 */
+      --muted: #1f2937;     /* gray-800 */
+      --text: #e5e7eb;      /* gray-200 */
+      --accent: #38bdf8;    /* sky-400 */
+      --accent-2: #0ea5e9;  /* sky-500 */
+      --ok: #22c55e;        /* green-500 */
+      --bad: #ef4444;       /* red-500 */
+      --warn: #f59e0b;      /* amber-500 */
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      background: radial-gradient(1000px 600px at 20% -10%, #0b1220 0%, var(--bg) 60%),
+                  radial-gradient(800px 500px at 120% 10%, #0b1220 0%, transparent 60%);
+      color: var(--text);
+      margin: 0;
+      padding: 24px 16px 80px;
+    }
+    .container { max-width: 980px; margin: 0 auto; }
+    h1 { text-align: center; color: var(--accent); margin: 8px 0 12px; }
+    .sub { text-align: center; color: #a3a3a3; margin-bottom: 24px; }
+
+    .toolbar {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    button {
+      background: var(--accent);
+      color: #0f172a; border: none; border-radius: 10px; padding: 10px 16px; font-weight: 600;
+      cursor: pointer; box-shadow: 0 4px 20px rgba(56,189,248,.15); transition: transform .08s ease, background .2s ease;
+    }
+    button:hover { background: var(--accent-2); }
+    button:active { transform: translateY(1px); }
+    .ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+
+    .question { background: linear-gradient(180deg, var(--card), #0d1425); border: 1px solid #1f2937; border-radius: 14px; padding: 16px; margin: 14px 0; position: relative; }
+    .qhead { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+    .qnum { font-weight: 800; color: #cbd5e1; }
+    .qtxt { font-weight: 600; }
+
+    .options { display: grid; gap: 8px; }
+    .opt { display: grid; grid-template-columns: 24px 1fr; align-items: start; gap: 10px; padding: 10px; border: 1px solid #1f2937; border-radius: 10px; background: #0b1220; cursor: pointer; }
+    .opt input { margin-top: 2px; accent-color: var(--accent-2); }
+    .opt.correct { border-color: rgba(34,197,94,.6); background: rgba(34,197,94,.08); }
+    .opt.incorrect { border-color: rgba(239,68,68,.6); background: rgba(239,68,68,.08); }
+
+    .feedback { margin-top: 8px; font-size: 14px; line-height: 1.35; }
+    .good { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .explain { color: #c7c7c7; }
+
+    .result { text-align: center; font-size: 18px; margin-top: 20px; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #0b1220; border: 1px solid #1f2937; color: #d1d5db; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Security Controls Quiz</h1>
+    <div class="sub">CompTIA Security+ SY0-701 &middot; Objective 1.1</div>
+
+    <div class="toolbar">
+      <button id="submitBtn" title="Calculate your total score">Submit Quiz</button>
+      <button id="resetBtn" class="ghost" title="Clear all answers and feedback">Reset</button>
+      <button id="revealBtn" class="ghost" title="Show the correct choice for each question">Reveal Answers</button>
+    </div>
+
+    <form id="quizForm" autocomplete="off"></form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    // Quiz data with explanations for instant feedback
+    const quizData = [
+      { q: "Which one of the following is not one of the four broad categories of security controls?", options: ["Technical", "Managerial", "Operational", "Regulatory"], answer: 3, why: "The four categories commonly referenced are technical, managerial, operational, and physical." },
+      { q: "A firewall rule that blocks traffic is an example of which type of security control?", options: ["Detective", "Preventive", "Corrective", "Directive"], answer: 1, why: "Block rules attempt to stop an event before it happens — that's preventive." },
+      { q: "A sign on a door that states 'Authorized Personnel Only' is best classified as which type of control?", options: ["Preventive", "Detective", "Directive", "Compensating"], answer: 2, why: "A directive control tells people what is required or prohibited." },
+      { q: "Which control type attempts to reduce the likelihood of an incident before it occurs?", options: ["Corrective", "Detective", "Preventive", "Directive"], answer: 2, why: "Preventive controls reduce the chance of occurrence (e.g., access controls)." },
+      { q: "Reviewing system logs to detect suspicious activity is an example of what type of control?", options: ["Preventive", "Detective", "Corrective", "Compensating"], answer: 1, why: "Log review surfaces events that have occurred or are in progress — detective." },
+      { q: "If an attack has occurred, and you restore data from backups, this is an example of which type of control?", options: ["Preventive", "Detective", "Corrective", "Directive"], answer: 2, why: "Corrective controls remediate impact after an incident (e.g., restore from backups)." },
+      { q: "A policy requiring employees to report security incidents is an example of which control type?", options: ["Preventive", "Detective", "Directive", "Corrective"], answer: 2, why: "Policies that instruct behavior are directive controls." },
+      { q: "Which of these is a managerial control?", options: ["Antivirus software", "Security policy documentation", "Security guards", "Door locks"], answer: 1, why: "Managerial controls include policy and governance documentation." },
+      { q: "Which of these is a technical control?", options: ["Security training", "Air gap", "Firewall", "Security awareness posters"], answer: 2, why: "Technical controls are enforced by technology (e.g., firewalls, IDS)." },
+      { q: "Which of these is an operational control?", options: ["Badge readers on doors", "Conducting background checks on staff", "Encryption of data", "Security policies"], answer: 1, why: "Operational controls are people/process actions such as hiring checks and procedures." },
+      { q: "Which of these is a physical control?", options: ["Mantrap", "Intrusion detection system", "Security policy", "Access control list"], answer: 0, why: "Physical controls are tangible barriers or mechanisms like mantraps and locks." },
+      { q: "A deterrent serves to:", options: ["Correct damage after an event", "Detect incidents", "Discourage attacks by raising perceived risk", "Enforce policies"], answer: 2, why: "Deterrents increase perceived cost/risk so an attacker reconsiders." },
+      { q: "A receptionist checking identification at the entrance is an example of which control type and category?", options: ["Preventive / Managerial", "Detective / Technical", "Preventive / Operational", "Directive / Physical"], answer: 2, why: "It's a human process preventing unauthorized entry — operational and preventive." },
+      { q: "A splash screen that warns unauthorized users is an example of:", options: ["Preventive / Technical", "Directive / Technical", "Detective / Technical", "Corrective / Technical"], answer: 1, why: "It conveys instructions/rules to users via a technical control surface." },
+      { q: "A motion detector that triggers an alarm is which type of control?", options: ["Preventive", "Detective", "Corrective", "Directive"], answer: 1, why: "Motion detection alerts on events — it's detective." },
+      { q: "A demotion or warning as a consequence of a security violation is an example of which control type?", options: ["Preventive", "Directive", "Detective", "Deterrent"], answer: 3, why: "Consequences discourage repeat behavior — they deter." },
+      { q: "A compensating control is used when:", options: ["A preventive control has failed", "A detective control is in use", "The primary control cannot be implemented", "A directive control is violated"], answer: 2, why: "Compensating controls substitute when a preferred control isn't feasible." },
+      { q: "Separation of duties to reduce risk is often used as a:", options: ["Compensating control", "Preventive control", "Detective control", "Directive control"], answer: 1, why: "Separating responsibilities reduces the chance of fraud or error — it's primarily preventive." },
+      { q: "A system login banner that instructs users about acceptable use is an example of:", options: ["Preventive / Technical", "Directive / Technical", "Detective / Technical", "Corrective / Operational"], answer: 1, why: "A directive message implemented via technology (banner) is a directive/technical control." },
+      { q: "Which combination is correct: Backup restoration = ___ control in the ___ category?", options: ["Corrective / Technical", "Preventive / Managerial", "Detective / Physical", "Directive / Operational"], answer: 0, why: "Restoring backups is corrective and commonly executed via technical means." }
+    ];
+
+    const form = document.getElementById('quizForm');
+    const resultBox = document.getElementById('result');
+
+    // Render questions
+    quizData.forEach((item, idx) => {
+      const q = document.createElement('div');
+      q.className = 'question';
+      q.dataset.index = idx;
+
+      q.innerHTML = `
+        <div class=\"qhead\">
+          <div class=\"qnum\">Q${idx + 1}.</div>
+          <div class=\"qtxt\">${item.q}</div>
+        </div>
+        <div class=\"options\"></div>
+        <div class=\"feedback\" id=\"fb-${idx}\"></div>
+      `;
+
+      const opts = q.querySelector('.options');
+      item.options.forEach((opt, i) => {
+        const id = `q${idx}o${i}`;
+        const wrap = document.createElement('label');
+        wrap.className = 'opt';
+        wrap.innerHTML = `
+          <input type=\"radio\" id=\"${id}\" name=\"q${idx}\" value=\"${i}\">
+          <div>${opt}</div>
+        `;
+        wrap.addEventListener('change', (e) => onSelect(idx, i, wrap));
+        opts.appendChild(wrap);
+      });
+
+      form.appendChild(q);
+    });
+
+    function onSelect(qIndex, choiceIndex, labelEl) {
+      const item = quizData[qIndex];
+      const answers = Array.from(document.querySelectorAll(`input[name='q${qIndex}']`));
+      const wrappers = answers.map(r => r.closest('.opt'));
+
+      // Clear previous state
+      wrappers.forEach(w => w.classList.remove('correct', 'incorrect'));
+
+      // Mark selected
+      if (choiceIndex === item.answer) {
+        labelEl.classList.add('correct');
+        showFeedback(qIndex, true, item);
+      } else {
+        labelEl.classList.add('incorrect');
+        showFeedback(qIndex, false, item);
+        // Also highlight the correct one for learning effect
+        wrappers[item.answer].classList.add('correct');
+      }
+    }
+
+    function showFeedback(qIndex, isCorrect, item) {
+      const box = document.getElementById(`fb-${qIndex}`);
+      const icon = isCorrect ? '✅' : '❌';
+      const toneCls = isCorrect ? 'good' : 'bad';
+      box.innerHTML = `<span class=\"${toneCls}\">${icon} ${isCorrect ? 'Correct' : 'Incorrect'}</span><br><span class=\"explain\">${item.why}</span>`;
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      const total = quizData.length;
+      let score = 0, answered = 0;
+      quizData.forEach((_, idx) => {
+        const picked = document.querySelector(`input[name='q${idx}']:checked`);
+        if (picked) {
+          answered++;
+          if (+picked.value === quizData[idx].answer) score++;
+        }
+      });
+      resultBox.innerHTML = `<span class=\"pill\">Score: ${score} / ${total} &nbsp;•&nbsp; Answered: ${answered}/${total}</span>`;
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      // Clear selections and feedback
+      quizData.forEach((_, idx) => {
+        const radios = document.querySelectorAll(`input[name='q${idx}']`);
+        radios.forEach(r => { r.checked = false; r.closest('.opt').classList.remove('correct','incorrect'); });
+        document.getElementById(`fb-${idx}`).innerHTML = '';
+      });
+      resultBox.textContent = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('revealBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      quizData.forEach((item, idx) => {
+        const radios = Array.from(document.querySelectorAll(`input[name='q${idx}']`));
+        const wrappers = radios.map(r => r.closest('.opt'));
+        wrappers.forEach(w => w.classList.remove('correct','incorrect'));
+        wrappers[item.answer].classList.add('correct');
+        showFeedback(idx, true, item);
+      });
+    });
+  </script>
+</body>
+</html>
