@@ -1,6 +1,6 @@
 {
   "title": "Security Controls – CompTIA Security+ SY0-701 (1.1)",
-  "timerMinutes": 30,
+  "timerMinutes": 20,
   "items": [
     { "id":"q1", "stem":"Which one of the following is not one of the four broad categories of security controls?", "choices":["Technical","Managerial","Operational","Regulatory"], "answer":3, "explain":"Common categories: technical, managerial, operational, physical." },
     { "id":"q2", "stem":"A firewall rule that blocks traffic is an example of which type of security control?", "choices":["Detective","Preventive","Corrective","Directive"], "answer":1, "explain":"Block rules stop incidents before they occur (preventive)." },
