@@ -215,8 +215,8 @@
   }
 
   function startExamTimer(){
-    // Optional: 30-minute timer. Change as you like.
-    const DURATION = (data.timerMinutes ?? 30) * 60 * 1000;
+    // Optional: 20-minute timer. Change as you like.
+    const DURATION = (data.timerMinutes ?? 20) * 60 * 1000;
     const end = Date.now() + DURATION;
     timerEl.hidden = false;
     clearInterval(examTimer);
