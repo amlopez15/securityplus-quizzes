@@ -1,0 +1,20 @@
+{
+  "title": "Test Quiz 2 – Example",
+  "timerMinutes": 20,
+  "items": [
+    {
+      "id": "q1",
+      "stem": "Which of the following is a preventive control?",
+      "choices": ["Firewall rule", "IDS alert", "Log review", "Backup restore"],
+      "answer": 0,
+      "explain": "A firewall rule prevents traffic, so it's preventive."
+    },
+    {
+      "id": "q2",
+      "stem": "What does MFA stand for?",
+      "choices": ["Multi-Factor Authentication", "Mandatory File Access", "Managed Filter Application", "Multi-Frame Analysis"],
+      "answer": 0,
+      "explain": "MFA = Multi-Factor Authentication."
+    }
+  ]
+}
