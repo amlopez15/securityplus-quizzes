@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Quiz</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="stylesheet" href="./assets/css/quiz.css">
+</head>
+<body>
+  <header class="header">
+    <div class="wrap">
+      <h1 id="quizTitle">Loading…</h1>
+      <div class="controls">
+        <button id="modeBtn" class="ghost" aria-pressed="false" title="Toggle Practice/Exam">Mode</button>
+        <button id="revealBtn" class="ghost" title="Reveal answers (Practice mode only)">Reveal</button>
+        <button id="resetBtn" class="ghost" title="Reset answers">Reset</button>
+        <button id="exportBtn" class="ghost" title="Export results">Export</button>
+      </div>
+    </div>
+    <div class="progress">
+      <div id="progressBar" class="bar"></div>
+    </div>
+    <div class="status">
+      <span id="counter">0/0</span>
+      <span id="score" class="pill" aria-live="polite"></span>
+      <span id="timer" class="pill" hidden></span>
+    </div>
+  </header>
+
+  <main id="quizRoot" class="container" aria-live="polite"></main>
+
+  <footer class="footer">
+    <a href="./index.html">← Back to Hub</a>
+  </footer>
+
+  <script src="./assets/js/quiz.js" defer></script>
+</body>
+</html>
